@@ -1,28 +1,32 @@
-import React from 'react';
+import React, { Component } from 'react';
 
-const App = () => {
-  const profiles = [
-    { name: "taro", age: 10 },
-    { name: "hanako", age: 5 },
-    { name: "baby" }
-  ]
-  return (
-    <>
-      {
-        profiles.map((profile, index) => {
-          return <User name={profile.name} age={profile.age} key={index} />
-        })
-      }
-    </>
-  )
-}
+const App = () => (<Counter></Counter>)
 
-const User = (props) => {
-  return <div>Hi, I am {props.name} {props.age} years old.</div>
-}
+class Counter extends Component {
+  constructor(props) {
+    super(props)
+    console.log(this.state)
+    this.state = { count: 5 }
+  }
 
-User.defaultProps = {
-  age: 0
+  handlePlusButton = () => {
+    this.setState({count: this.state.count + 1})
+  }
+
+  handleMinusButton = () => {
+    this.setState({count:  this.state.count - 1})
+  }
+
+  render() {
+    console.log(this.state)
+    return (
+      <>
+        <div>count {this.state.count}</div>
+        <button onClick={this.handlePlusButton}>+1</button>
+        <button onClick={this.handleMinusButton}>-1</button>
+      </>
+    )
+  }
 }
 
 export default App;
