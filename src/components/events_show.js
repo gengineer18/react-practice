@@ -1,13 +1,20 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
 import { Field, reduxForm } from 'redux-form'
-import { postEvent } from '../actions'
 import { Link } from 'react-router-dom'
 
-class EventsNew extends Component {
+import { getEvent, deleteEvent, putEvent } from '../actions'
+
+class EventsShow extends Component {
   constructor(props) {
     super(props)
     this.onSubmit = this.onSubmit.bind(this)
+    this.onDeleteClick = this.onDeleteClick.bind(this)
+  }
+
+  componentDidMount() {
+    const { id } = this.props.match.params
+    if(id) this.props.getEvent(id)
   }
 
   renderField(field) {
@@ -21,7 +28,13 @@ class EventsNew extends Component {
   }
 
   async onSubmit(values) {
-    await this.props.postEvent(values)
+    await this.props.putEvent(values)
+    this.props.history.push('/')
+  }
+
+  async onDeleteClick() {
+    const { id } = this.props.match.params
+    await this.props.deleteEvent(id)
     this.props.history.push('/')
   }
 
@@ -35,6 +48,7 @@ class EventsNew extends Component {
           <div>
             <input type="submit" disabled={pristine || submitting || invalid} />
             <Link to="/">Cancel</Link>
+            <Link to="/" onClick={this.onDeleteClick}>Delete</Link>
           </div>
         </form>
       </>
@@ -42,8 +56,14 @@ class EventsNew extends Component {
   }
 }
 
-
-const mapDispatchToProps = ({ postEvent })
+const mapStateToProps = (state, ownProps) => {
+  const event = state.events[ownProps.match.params.id]
+  return {
+    initialValues: event,
+    event
+  }
+}
+const mapDispatchToProps = ({ deleteEvent, getEvent, putEvent })
 
 const validate = values => {
   const errors = {}
@@ -52,6 +72,6 @@ const validate = values => {
   return errors
 }
 
-export default connect(null, mapDispatchToProps)(
-  reduxForm({ validate, form: 'eventNewForm' })(EventsNew)
+export default connect(mapStateToProps, mapDispatchToProps)(
+  reduxForm({ validate, form: 'eventShowForm', enableReinitialize: true })(EventsShow)
 )
