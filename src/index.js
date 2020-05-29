@@ -7,6 +7,7 @@ import './index.css'
 import reducer from './reducers'
 import EventsIndex from './components/events_index'
 import EventsNew from './components/events_new'
+import EventsShow from './components/events_show'
 import * as serviceWorker from './serviceWorker'
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import { composeWithDevTools } from 'redux-devtools-extension';
@@ -20,8 +21,10 @@ ReactDOM.render(
   <Provider store={store}>
     <BrowserRouter>
       <Switch>
-        <Route exact path="/events/new" component={EventsNew}></Route>
+        <Route path="/events/new" component={EventsNew}></Route>
+        <Route path="/events/:id" component={EventsShow}></Route>
         <Route exact path="/" component={EventsIndex}></Route>
+        <Route exact path="/events" component={EventsIndex}></Route>
       </Switch>
     </BrowserRouter>
   </Provider>,
